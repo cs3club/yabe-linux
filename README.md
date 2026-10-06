@@ -1,15 +1,15 @@
-# yabe-firewall
+# yabe-linux
 
-Ansible configuration for the Yabe range firewall team.
+Ansible configuration for the Yabe range Linux team.
 
-## Devices
+## Machines
 
-| Hostname       | IP           | Role                        |
-|----------------|--------------|-----------------------------|
-| vyos           | 10.30.1.1    | Border router, NAT          |
-| debian-router  | 10.30.1.2    | Distribution router, ntopng |
-| mikrotik       | 10.30.1.3    | Linux segment firewall      |
-| pfsense        | 10.30.1.4    | Windows segment firewall    |
+| Hostname  | IP            | OS              | Role                    |
+|-----------|---------------|-----------------|-------------------------|
+| web01     | 10.30.10.10   | Ubuntu 22.04    | nginx, Apache, WordPress|
+| mail01    | 10.30.10.11   | Fedora          | Postfix, Dovecot        |
+| db01      | 10.30.10.12   | OpenSUSE Leap   | MariaDB, PostgreSQL, Redis |
+| fs01      | 10.30.10.13   | Rocky Linux     | vsftpd, NFS, Samba, CA  |
 
 ## Setup
 
