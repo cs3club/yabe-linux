@@ -1,0 +1,14 @@
+---
+# requirements.yml
+# Ansible collections this project depends on.
+# Install all of them with:
+#   ansible-galaxy collection install -r requirements.yml
+
+collections:
+  - name: ansible.posix
+    # sysctl, mount, firewalld, authorized_key and other POSIX modules
+    # Docs: https://docs.ansible.com/ansible/latest/collections/ansible/posix/
+
+  - name: community.general
+    # Large collection of general purpose modules
+    # Docs: https://docs.ansible.com/ansible/latest/collections/community/general/

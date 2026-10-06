@@ -1,0 +1,17 @@
+---
+# site.yml
+# Master playbook — entry point for everything.
+# Run with:
+#   ansible-playbook site.yml --check --diff   (dry run first, always)
+#   ansible-playbook site.yml                  (apply)
+#   ansible-playbook site.yml --tags <tag>     (run one role only)
+
+- name: All plays
+  hosts: all
+  become: true
+  gather_facts: true
+  roles: []
+  # Add roles here as you build them, e.g.:
+  # roles:
+  #   - role: vyos
+  #     tags: vyos

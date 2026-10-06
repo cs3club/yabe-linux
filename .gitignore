@@ -1,0 +1,43 @@
+# .gitignore
+
+# ── Secrets ───────────────────────────────────────────────────────
+vars/secrets.yml
+*secret*
+*password*
+*credentials*
+*.pem
+*.key
+*.pfx
+*.p12
+*.age
+id_rsa
+id_ed25519
+*_rsa
+*_ecdsa
+
+# ── Ansible runtime ───────────────────────────────────────────────
+*.retry
+.vault_pass
+vault_pass.txt
+
+# ── Editor and OS junk ────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# ── Python ────────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+
+# ── Logs ──────────────────────────────────────────────────────────
+*.log
+
+# ── Exceptions ────────────────────────────────────────────────────
+!vars/secrets.yml.example

@@ -1,0 +1,6 @@
+---
+# vars/main.yml
+# Non-secret variables for this project.
+# All tunable values live here — never hardcoded in tasks.
+
+domain: "yabe.corp"
