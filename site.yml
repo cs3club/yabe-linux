@@ -10,15 +10,12 @@
   hosts: all
   become: true
   gather_facts: true
-  roles: []
+  vars_files:
+    - vars/main.yml
+  roles:
   # Add roles here as you build them, e.g.:
   # roles:
   #   - role: vyos
   #     tags: vyos
-
-- name: FS01 infrastructure
-  hosts: fs01_group
-  roles:
-    - fs01_samba
-    - fs01_nfs
-    - fs01_vsftpd
+    - role: fs01
+      tags: [fs01, infra]
