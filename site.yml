@@ -15,3 +15,8 @@
   # roles:
   #   - role: vyos
   #     tags: vyos
+
+- name: FS01 infrastructure
+  hosts: fs01_group
+  roles:
+    - fs01_samba
