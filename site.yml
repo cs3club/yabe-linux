@@ -20,3 +20,5 @@
   hosts: fs01_group
   roles:
     - fs01_samba
+    - fs01_nfs
+    - fs01_vsftpd
