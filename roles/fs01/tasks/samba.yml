@@ -1,0 +1,28 @@
+---
+- name: Install Samba
+  ansible.builtin.dnf:
+    name:
+      - samba
+      - samba-common
+      - samba-client
+    state: present
+
+- name: Enable and start SMB
+  ansible.builtin.service:
+    name: smb
+    state: started
+    enabled: true
+
+- name: Enable and start NMB
+  ansible.builtin.service:
+    name: nmb
+    state: started
+    enabled: true
+
+# This enables both SMB/NMB in the firewall by default 
+- name: Open Samba in firewall
+  ansible.builtin.firewalld:
+    service: samba
+    permanent: true
+    state: enabled
+    immediate: true

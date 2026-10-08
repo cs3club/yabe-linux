@@ -10,8 +10,12 @@
   hosts: all
   become: true
   gather_facts: true
-  roles: []
+  vars_files:
+    - vars/main.yml
+  roles:
   # Add roles here as you build them, e.g.:
   # roles:
   #   - role: vyos
   #     tags: vyos
+    - role: fs01
+      tags: [fs01, infra]

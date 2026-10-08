@@ -1,0 +1,21 @@
+---
+- name: Install Samba
+  ansible.builtin.dnf:
+    name:
+      - samba
+      - samba-common
+      - samba-client
+    state: present
+
+- name: Enable & Start Samba
+  ansible.builtin.service:
+    name: smb
+    state: started
+    enabled: true # makes it survive a reboot <3
+
+- name: Open Samba in Firewall
+  ansible.builtin.firewalld:
+    service: samba
+    permanent: true
+    state: enabled
+    immediate: true # makes the firewall rule apply without reload

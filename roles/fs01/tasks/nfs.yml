@@ -1,0 +1,36 @@
+---
+- name: Install NFS utilities
+  ansible.builtin.dnf:
+    name:
+      - nfs-utils
+    state: present
+
+- name: ENable and start NFS server
+  ansible.builtin.service:
+    name: nfs-server
+    state: started
+    enabled: true
+
+- name: Create NFS share directory
+  ansible.builtin.file:
+    path: /srv/nfs/shared
+    state: directory
+    owner: nobody
+    group: nobody
+    mode: '0755'
+
+- name: Configure NFS exports
+  ansible.builtin.template:
+    src: exports.j2
+    dest: /etc/exports
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload NFS exports
+
+- name: Open NFS in firewall
+  ansible.builtin.firewalld:
+    service: nfs
+    permanent: true
+    state: enabled
+    immediate: true

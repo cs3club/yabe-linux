@@ -1,0 +1,10 @@
+---
+- name: Reload NFS exports
+  ansible.builtin.service:
+    name: nfs-server
+    state: reloaded
+
+- name: Restart vsftpd
+  ansible.builtin.service:
+    name: vsftpd
+    state: restarted
