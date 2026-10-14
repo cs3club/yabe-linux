@@ -5,7 +5,7 @@
       - nfs-utils
     state: present
 
-- name: ENable and start NFS server
+- name: Enable and start NFS server
   ansible.builtin.service:
     name: nfs-server
     state: started
