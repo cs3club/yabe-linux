@@ -5,8 +5,10 @@
 
 domain: "yabe.corp"
 
+#----------NFS----------
 nfs_allowed_network: "10.30.0.0/16"
 nfs_export_options: "rw,sync,no_subtree_check"
+#----------FTP----------
 ftp_anonymous_enable: "NO"
 ftp_local_enable: "YES"
 ftp_write_enable: "YES"
@@ -18,3 +20,12 @@ ftp_connect_from_port_20: "YES"
 ftp_listen: "YES"
 ftp_listen_ipv6: "NO"
 ftp_pam_service_name: "vsftpd"
+#---------SAMBA---------
+samba_workgroup: "YABE"
+samba_server_string: "FS01 File Server"
+samba_security: "user"
+samba_map_to_guest: "never"
+samba_path: "/srv/samba/shared"
+samba_browseable: "yes"
+samba_read_only: "no"
+samba_valid_users: "sambausers"

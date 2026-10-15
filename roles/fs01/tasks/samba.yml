@@ -26,3 +26,12 @@
     permanent: true
     state: enabled
     immediate: true
+
+- name: Deploy Samba config
+  ansible.builtin.template:
+    src: smb.conf.j2
+    dest: /etc/samba/smb.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart Samba

@@ -8,3 +8,8 @@
   ansible.builtin.service:
     name: vsftpd
     state: restarted
+
+- name: Restart Samba
+  ansible.builtin.service:
+    name: smb
+    state: restarted
