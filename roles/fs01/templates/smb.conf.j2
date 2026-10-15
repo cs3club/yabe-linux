@@ -1,0 +1,11 @@
+[global]
+   workgroup = {{ samba_workgroup }}
+   server string = {{ samba_server_string }}
+   security = {{ samba_security }}
+   map to guest = {{ samba_map_to_guest }}
+
+[shared]
+   path = {{ samba_path }}
+   browseable = {{ samba_browseable }}
+   read only = {{ samba_read_only }}
+   valid user = @{{ samba_valid_users }}

@@ -1,0 +1,35 @@
+---
+- name: Install vsftpd
+  ansible.builtin.dnf:
+    name: vsftpd
+    state: present
+
+- name: Create FTP share directory
+  ansible.builtin.file:
+    path: /srv/ftp/shared
+    state: directory
+    owner: ftp
+    group: ftp
+    mode: '0755'
+
+- name: Deploy vsftpd config
+  ansible.builtin.template:
+    src: vsftpd.conf.j2
+    dest: /etc/vsftpd/vsftpd.conf
+    owner: root
+    group: root
+    mode: '0600'
+  notify: Restart vsftpd
+
+- name: Enable and start vsftpd
+  ansible.builtin.service:
+    name: vsftpd
+    state: started
+    enabled: true
+
+- name: Open FTP port in firewall
+  ansible.builtin.firewalld:
+    service: ftp
+    permanent: true
+    state: enabled
+    immediate: true

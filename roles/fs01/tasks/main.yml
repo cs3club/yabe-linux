@@ -1,0 +1,9 @@
+---
+- ansible.builtin.import_tasks: samba.yml
+  tags: [samba, infra]
+
+- ansible.builtin.import_tasks: nfs.yml
+  tags: [nfs, infra]
+
+- ansible.builtin.import_tasks: vsftpd.yml
+  tags: [vsftpd, infra]
