@@ -5,6 +5,7 @@
       - samba
       - samba-common
       - samba-client
+      - expect
     state: present
 
 - name: Enable and start SMB
@@ -19,6 +20,29 @@
     state: started
     enabled: true
 
+# This is required because this creates the actual user, while the one following this creates the SAMBA user.
+- name: Create LINUX users for Samba
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    groups: "{{ samba_valid_users }}"
+    append: true
+    state: present
+  loop: "{{ samba_users }}"
+  no_log: true
+
+- name: Create sambausers group
+  ansible.builtin.group:
+    name: "{{ samba_valid_users }}"
+    state: present
+
+- name: Create Samba share directory
+  ansible.builtin.file:
+    path: "{{ samba_path }}"
+    state: directory
+    owner: root
+    group: "{{ samba_valid_users }}"
+    mode: '0770'
+
 # This enables both SMB/NMB in the firewall by default 
 - name: Open Samba in firewall
   ansible.builtin.firewalld:
@@ -26,6 +50,15 @@
     permanent: true
     state: enabled
     immediate: true
+
+- name: Create Samba users
+  ansible.builtin.expect:
+    command: smbpasswd -a {{ item.name }}
+    responses:
+      "New SMB password:": "{{ item.password }}"
+      "Retype new SMB password:": "{{ item.password }}"
+  loop: "{{ samba_users }}"
+  no_log: true
 
 - name: Deploy Samba config
   ansible.builtin.template:

@@ -12,6 +12,7 @@
   gather_facts: true
   vars_files:
     - vars/main.yml
+    - vars/secrets.yml
   roles:
     - role: fs01
       tags: [fs01, infra]
