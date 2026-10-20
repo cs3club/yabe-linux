@@ -21,3 +21,15 @@
   password: "{{ mariadb_root_password }}"
   login_unix_socket: /var/run/mysql.sock
   state: present
+
+- name: Remove anonymous MariaDB users
+  community.general.mysql_user:
+  name: ""
+  state: absent
+  login_unix_socket: /var/run/mysql/mysql.sock
+
+- name: Remove MariaDB Test Database
+  community.general.mysql_db:
+  name: test
+  state: absent
+  login_unix_socket: /var/run/mysql/mysql.sock
