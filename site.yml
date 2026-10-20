@@ -10,7 +10,13 @@
   hosts: all
   become: true
   gather_facts: true
-  roles: []
+  roles:
+    - role: mariadb
+      tags: mariadb
+    - role: postgresql
+      tags: postgresql
+    - role: redis
+      tags: redis
   # Add roles here as you build them, e.g.:
   # roles:
   #   - role: vyos
