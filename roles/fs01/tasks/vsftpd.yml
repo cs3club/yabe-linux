@@ -4,13 +4,60 @@
     name: vsftpd
     state: present
 
-- name: Create FTP share directory
+- name: Create FTP groups
+  ansible.builtin.group:
+    name: "{{ item.name }}"
+    state: present
+  loop: "{{ ftp_groups }}"
+
+- name: Create FTP vendor directories
   ansible.builtin.file:
-    path: /srv/ftp/shared
+    path: "{{ ftp_path }}/{{ item.name }}"
     state: directory
-    owner: ftp
-    group: ftp
-    mode: '0755'
+    owner: root
+    group: "{{ item.group }}"
+    mode: '0750'
+  loop: "{{ ftp_users }}"
+  no_log: true
+
+- name: Check if FTP user exists
+  ansible.builtin.command: id {{ item.name }}
+  loop: "{{ ftp_users }}"
+  register: ftp_user_check
+  changed_when: false
+  failed_when: false
+  no_log: true
+
+- name: Create LINUX users for FTP
+  ansible.builtin.user:
+    name: "{{ item.item.name }}"
+    groups: "{{ item.item.group }}"
+    home: "{{ ftp_path }}/{{ item.item.name }}"
+    append: true
+    state: present
+  loop: "{{ ftp_user_check.results }}"
+  when: item.rc is defined and item.rc != 0
+  no_log: true
+
+- name: Set FTP user passwords
+  ansible.builtin.expect:
+    command: passwd {{ item.item.name }}
+    responses:
+      "New password:": "{{ item.item.password }}"
+      "Retype new password:": "{{ item.item.password }}"
+  loop: "{{ ftp_user_check.results }}"
+  when: item.rc is defined and item.rc != 0
+  no_log: true
+
+- name: Create vendor subdirectories
+  ansible.builtin.file:
+    path: "{{ ftp_path }}/{{ item.0.name }}/{{ item.1 }}"
+    state: directory
+    owner: "{{ item.0.name }}"
+    group: "{{ item.0.group }}"
+    mode: '0750'
+  loop: "{{ ftp_users | product(['products', 'images', 'inventory']) | list }}"
+  no_log: true
 
 - name: Deploy vsftpd config
   ansible.builtin.template:

@@ -7,7 +7,13 @@ domain: "yabe.corp"
 
 #----------NFS----------
 nfs_allowed_network: "10.30.0.0/16"
-nfs_export_options: "rw,sync,no_subtree_check"
+nfs_export_options: "ro,sync,no_subtree_check"
+nfs_path: "/srv/ftp/vendors"
+#reminder to me, please remember to talk to web01 to coord these to make it able to function the way thats in my head
+nfs_users:
+  - name: yabe_web
+    uid: 1500
+    comment: "Yabe web server service account"
 
 #----------FTP----------
 ftp_anonymous_enable: "NO"
@@ -21,16 +27,36 @@ ftp_connect_from_port_20: "YES"
 ftp_listen: "YES"
 ftp_listen_ipv6: "NO"
 ftp_pam_service_name: "vsftpd"
+ftp_path: "/srv/ftp/vendors"
+ftp_groups:
+  - name: vendors
+ftp_users:
+  - name: joystickjunction
+    group: vendors
+    password: "{{ vault_ftp_joystick }}"
+  - name: hamchan_imports
+    group: vendors
+    password: "{{ vault_ftp_hamchan }}"
 
 #---------SAMBA---------
 samba_workgroup: "YABE"
 samba_server_string: "FS01 File Server"
 samba_security: "user"
 samba_map_to_guest: "never"
-samba_path: "/srv/samba/shared"
 samba_browseable: "yes"
-samba_read_only: "no"
-samba_valid_users: "sambausers"
+samba_groups:
+  - name: admin
+    path: "/srv/samba/admin"
+    group: admin
+    read_only: "no"
+  - name: staff
+    path: "/srv/samba/staff"
+    group: staff
+    read_only: "yes"
 samba_users:
   - name: sdavis
-    password: "{{ vault_samba }}"
+    group: admin
+    password: "{{ vault_samba_sdavis }}"
+  - name: yabe_staff
+    group: staff
+    password: "{{ vault_samba_staff }}"

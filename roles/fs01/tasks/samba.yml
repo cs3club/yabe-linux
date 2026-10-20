@@ -8,6 +8,49 @@
       - expect
     state: present
 
+- name: Create sambausers group
+  ansible.builtin.group:
+    name: "{{ item.name }}"
+    state: present
+  loop: "{{ samba_groups }}"
+
+- name: Create Samba share directory
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: root
+    group: "{{ item.group }}"
+    mode: '0770'
+  loop: "{{ samba_groups }}"
+
+- name: Check if Linux user exists
+  ansible.builtin.command: id {{ item.name }}
+  loop: "{{ samba_users }}"
+  register: samba_linux_user_check
+  changed_when: false
+  failed_when: false
+  no_log: true
+
+# This is required because this creates the actual user, while the one following this creates the SAMBA user.
+- name: Create LINUX users for Samba
+  ansible.builtin.user:
+    name: "{{ item.item.name }}"
+    groups: "{{ item.item.group }}"
+    append: true
+    state: present
+  loop: "{{ samba_linux_user_check.results }}"
+  when: item.rc is defined and item.rc != 0
+  no_log: true
+
+- name: Deploy Samba config
+  ansible.builtin.template:
+    src: smb.conf.j2
+    dest: /etc/samba/smb.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart Samba
+
 - name: Enable and start SMB
   ansible.builtin.service:
     name: smb
@@ -20,29 +63,6 @@
     state: started
     enabled: true
 
-# This is required because this creates the actual user, while the one following this creates the SAMBA user.
-- name: Create LINUX users for Samba
-  ansible.builtin.user:
-    name: "{{ item.name }}"
-    groups: "{{ samba_valid_users }}"
-    append: true
-    state: present
-  loop: "{{ samba_users }}"
-  no_log: true
-
-- name: Create sambausers group
-  ansible.builtin.group:
-    name: "{{ samba_valid_users }}"
-    state: present
-
-- name: Create Samba share directory
-  ansible.builtin.file:
-    path: "{{ samba_path }}"
-    state: directory
-    owner: root
-    group: "{{ samba_valid_users }}"
-    mode: '0770'
-
 # This enables both SMB/NMB in the firewall by default 
 - name: Open Samba in firewall
   ansible.builtin.firewalld:
@@ -51,6 +71,14 @@
     state: enabled
     immediate: true
 
+- name: Check if Samba user exists
+  ansible.builtin.shell: pdbedit -L | grep "^{{ item.name }}:"
+  loop: "{{ samba_users }}"
+  register: samba_uiser_check
+  changed_when: false
+  failed_when: false
+  no_log: true
+
 - name: Create Samba users
   ansible.builtin.expect:
     command: smbpasswd -a {{ item.name }}
@@ -58,13 +86,5 @@
       "New SMB password:": "{{ item.password }}"
       "Retype new SMB password:": "{{ item.password }}"
   loop: "{{ samba_users }}"
+  when: item.rc is defined and item.rc != 0
   no_log: true
-
-- name: Deploy Samba config
-  ansible.builtin.template:
-    src: smb.conf.j2
-    dest: /etc/samba/smb.conf
-    owner: root
-    group: root
-    mode: '0644'
-  notify: Restart Samba

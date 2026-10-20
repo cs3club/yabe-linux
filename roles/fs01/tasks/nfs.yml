@@ -5,19 +5,23 @@
       - nfs-utils
     state: present
 
-- name: Enable and start NFS server
-  ansible.builtin.service:
-    name: nfs-server
-    state: started
-    enabled: true
+- name: Check if NFS user exists
+  ansible.builtin.command: id {{ item.name }}
+  loop: "{{ nfs_users }}"
+  register: nfs_user_check
+  changed_when: false
+  failed_when: false
+  no_log: true
 
-- name: Create NFS share directory
-  ansible.builtin.file:
-    path: /srv/nfs/shared
-    state: directory
-    owner: nobody
-    group: nobody
-    mode: '0755'
+- name: Create NFS service accounts
+  ansible.builtin.user:
+    name: "{{ item.item.name }}"
+    uid: "{{ item.item.uid }}"
+    system: true
+    state: present
+  loop: "{{ nfs_user_check.results }}"
+  when: item.rc is defined and item.rc != 0
+  no_log: true
 
 - name: Configure NFS exports
   ansible.builtin.template:
@@ -27,6 +31,12 @@
     group: root
     mode: '0644'
   notify: Reload NFS exports
+
+- name: Enable and start NFS server
+  ansible.builtin.service:
+    name: nfs-server
+    state: started
+    enabled: true
 
 - name: Open NFS in firewall
   ansible.builtin.firewalld:
