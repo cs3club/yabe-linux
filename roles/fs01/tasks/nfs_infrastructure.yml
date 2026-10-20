@@ -1,0 +1,35 @@
+---
+- name: Install NFS utilities
+  ansible.builtin.dnf:
+    name:
+      - nfs-utils
+    state: present
+
+# In case this task is run prior to FTP
+- name: Ensure vendor directory exists for NFS export
+  ansible.builtin.file:
+    path: "{{ nfs_path }}"
+    state: directory
+    mode: '0755'
+
+- name: Configure NFS exports
+  ansible.builtin.template:
+    src: exports.j2
+    dest: /etc/exports
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload NFS exports
+
+- name: Enable and start NFS server
+  ansible.builtin.service:
+    name: nfs-server
+    state: started
+    enabled: true
+
+- name: Open NFS in firewall
+  ansible.builtin.firewalld:
+    service: nfs
+    permanent: true
+    state: enabled
+    immediate: true
