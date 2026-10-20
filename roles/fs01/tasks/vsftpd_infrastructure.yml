@@ -1,0 +1,37 @@
+---
+- name: Install vsftpd
+  ansible.builtin.dnf:
+    name: vsftpd
+    state: present
+
+- name: Deploy vsftpd config
+  ansible.builtin.template:
+    src: vsftpd.conf.j2
+    dest: /etc/vsftpd/vsftpd.conf
+    owner: root
+    group: root
+    mode: '0600'
+  notify: Restart vsftpd
+
+- name: Enable and start vsftpd
+  ansible.builtin.service:
+    name: vsftpd
+    state: started
+    enabled: true
+
+- name: Open FTP port in firewall
+  ansible.builtin.firewalld:
+    service: ftp
+    permanent: true
+    state: enabled
+    immediate: true
+
+# to explain this to myself; there's 2 modes in ftp. in passive (which is what we need b/c it's the client connecting to the server)
+# it picks a random high port for each data transfer. the firewall is gonna have no idea what port to allow if they're random
+# so this sets it to specific ranges; it's like setting ranges for a dhcp server sorta.
+- name: Open FTP passive port range in firewall
+  ansible.builtin.firewalld:
+    port: "{{ ftp_pasv_min_port }}-{{ ftp_pasv_max_port }}/tcp"
+    permanent: true
+    state: enabled
+    immediate: true

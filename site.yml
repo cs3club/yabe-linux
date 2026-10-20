@@ -6,6 +6,13 @@
 #   ansible-playbook site.yml                  (apply)
 #   ansible-playbook site.yml --tags <tag>     (run one role only)
 
+- name: Base configuration
+  hosts: all
+  become: true
+  roles:
+    - role: base
+      tags: [base]
+
 - name: FS01 file server and CA infrastructure
   hosts: fs01
   become: true

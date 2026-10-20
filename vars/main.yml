@@ -9,7 +9,7 @@ domain: "yabe.corp"
 nfs_allowed_network: "10.30.0.0/16"
 nfs_export_options: "ro,sync,no_subtree_check"
 nfs_path: "/srv/ftp/vendors"
-#reminder to me, please remember to talk to web01 to coord these to make it able to function the way thats in my head
+#Note: yabe_web UID HAS TO MATCH on web01 - coord with web01
 nfs_users:
   - name: yabe_web
     uid: 1500
@@ -33,6 +33,8 @@ ftp_pasv_max_port: 40100
 ftp_idle_timeout: 300
 ftp_data_timeout: 120
 ftp_path: "/srv/ftp/vendors"
+ftp_max_clients: 50
+ftp_max_per_ip: 5
 ftp_groups:
   - name: vendors
 ftp_users:
@@ -49,6 +51,11 @@ samba_server_string: "FS01 File Server"
 samba_security: "user"
 samba_map_to_guest: "never"
 samba_browseable: "yes"
+samba_min_protocol: "SMB2"
+samba_log_path: "/var/log/samba/log.%m"
+samba_log_level: 1
+samba_max_log_size: 5000
+samba_hosts_allow: "10.30.0.0/16 127.0.0.1"
 samba_groups:
   - name: admin
     path: "/srv/samba/admin"

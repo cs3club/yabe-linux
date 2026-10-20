@@ -23,13 +23,25 @@ All tunable variables live in 'vars/main.yml'.
 
 # Usage
 
-## Full run
-- ansible-playbook site.yml -K
+| Tag | Description |
+|-----|-------------|
+| 'infra ' | Run all infrastructure tasks across all services |
+| 'users' | Run all user management tasks across all services |
+| 'samba' | Run all Samba tasks |
+| 'nfs' | Run all NFS tasks |
+| 'vsftpd' | Run all FTP tasks |
 
-## Single service
-- ansible-playbook site.yml --tags samba -K
-- ansible-playbook site.yml --tags nfs -K
-- ansible-playbook site.yml --tags vsftpd -K
+### Examples
+'''bash
+# Run everything for one service
+- ansible-playbook site.yml --tags samba
+
+# Run only user management across all services
+- ansible-playbook site.yml --tags users
+
+# Run only FTP infrastructure, no user management
+ansible-playbook site.yml --tags vsftpd --skip-tags users
+'''
 
 ## Notes
 - DNS record 'ca.yabe.corp -> 10.30.10.13' must be created on DC01 before TLS (used in FTPS) can be configured
