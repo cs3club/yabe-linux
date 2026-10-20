@@ -1,3 +1,4 @@
+ftpd_banner={{ ftp_banner }}
 anonymous_enable={{ ftp_anonymous_enable }}
 local_enable={{ ftp_local_enable }}
 write_enable={{ ftp_write_enable }}
@@ -12,3 +13,5 @@ pam_service_name={{ ftp_pam_service_name }}
 pasv_address={{ ansible_host }}
 pasv_min_port={{ ftp_pasv_min_port }}
 pasv_max_port={{ ftp_pasv_max_port }}
+idle_session_timeout={{ ftp_idle_timeout }}
+data_connection_timeout={{ ftp_data_timeout }}

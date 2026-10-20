@@ -20,6 +20,29 @@
   loop: "{{ ftp_users }}"
   no_log: true
 
+# ------ User Offboarding ------
+- name: Get list of vendor users on system
+  ansible.builtin.shell: "getent group vendors | cut -d: -f4 | tr ',' '\n'"
+  register: current_ftp_users
+  changed_when: false
+
+- name: Remove offboarded FTP users
+  ansible.builtin.user:
+    name: "{{ item }}"
+    state: absent
+    remove: true
+  loop: "{{ current_ftp_users.stdout_lines }}"
+  when: item not in ftp_users | map(attribute='name') | list
+
+- name: Remove offboarded FTP directories
+  ansible.builtin.file:
+    path: "{{ ftp_path }}/{{ item }}"
+    state: absent
+  loop: "{{ current_ftp_users.stdout_lines }}"
+  when: item not in ftp_users | map(attribute='name') | list
+# -----------------------------
+
+# ----- User Onboarding -------
 - name: Check if FTP user exists
   ansible.builtin.command: id {{ item.name }}
   loop: "{{ ftp_users }}"
@@ -58,6 +81,7 @@
     mode: '0750'
   loop: "{{ ftp_users | product(['products', 'images', 'inventory']) | list }}"
   no_log: true
+# ---------------------------
 
 - name: Deploy vsftpd config
   ansible.builtin.template:

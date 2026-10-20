@@ -5,6 +5,13 @@
       - nfs-utils
     state: present
 
+# In case this task is run prior to FTP
+- name: Ensure vendor directory exists for NFS export
+  ansible.builtin.file:
+    path: "{{ nfs_path }}"
+    state: directory
+    mode: '0755'
+
 - name: Check if NFS user exists
   ansible.builtin.command: id {{ item.name }}
   loop: "{{ nfs_users }}"

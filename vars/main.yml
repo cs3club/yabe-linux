@@ -16,6 +16,7 @@ nfs_users:
     comment: "Yabe web server service account"
 
 #----------FTP----------
+ftp_banner: "Welcome to YABE FTP Server! Authorized users only. Unauthorized access WILL BE PROSECUTED."
 ftp_anonymous_enable: "NO"
 ftp_local_enable: "YES"
 ftp_write_enable: "YES"
@@ -29,6 +30,8 @@ ftp_listen_ipv6: "NO"
 ftp_pam_service_name: "vsftpd"
 ftp_pasv_min_port: 40000
 ftp_pasv_max_port: 40100
+ftp_idle_timeout: 300
+ftp_data_timeout: 120
 ftp_path: "/srv/ftp/vendors"
 ftp_groups:
   - name: vendors

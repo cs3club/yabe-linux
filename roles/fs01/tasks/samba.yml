@@ -23,6 +23,22 @@
     mode: '0770'
   loop: "{{ samba_groups }}"
 
+# ------- User Offboarding -------
+- name: Get list of Samba users on system
+  ansible.builtin.shell: "pdbedit -L | cut -d: -f1"
+  register: current_samba_users
+  changed_when: false
+
+- name: Remove offboarded Linux users
+  ansible.builtin.user:
+    name: "{{ item }}"
+    state: absent
+    remove: true
+  loop: "{{ current_samba_users.stdout_lines }}"
+  when: item not in samba_users | map(attribute='name') | list
+# --------------------------------
+
+# ---- Linux User Onboarding -----
 - name: Check if Linux user exists
   ansible.builtin.command: id {{ item.name }}
   loop: "{{ samba_users }}"
@@ -41,6 +57,7 @@
   loop: "{{ samba_linux_user_check.results }}"
   when: item.rc is defined and item.rc != 0
   no_log: true
+# -------------------------------
 
 - name: Deploy Samba config
   ansible.builtin.template:
@@ -71,6 +88,7 @@
     state: enabled
     immediate: true
 
+# --- Samba User Onboarding ---
 - name: Check if Samba user exists
   ansible.builtin.shell: pdbedit -L | grep "^{{ item.name }}:"
   loop: "{{ samba_users }}"
@@ -88,3 +106,4 @@
   loop: "{{ samba_users }}"
   when: item.rc is defined and item.rc != 0
   no_log: true
+# ----------------------------

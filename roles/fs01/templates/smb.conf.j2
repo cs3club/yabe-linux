@@ -10,5 +10,8 @@
    browseable = {{ samba_browseable }}
    read only = {{ share.read_only }}
    valid user = @{{ share.group }}
+   create mask = 0660
+   directory mask = 0770
+   force group = {{ share.group }}
 
 {% endfor %}
