@@ -32,16 +32,15 @@ All tunable variables live in 'vars/main.yml'.
 | 'vsftpd' | Run all FTP tasks |
 
 ### Examples
-'''bash
-# Run everything for one service
+
+#### Run everything for one service
 - ansible-playbook site.yml --tags samba
 
-# Run only user management across all services
+#### Run only user management across all services
 - ansible-playbook site.yml --tags users
 
-# Run only FTP infrastructure, no user management
+#### Run only FTP infrastructure, no user management
 ansible-playbook site.yml --tags vsftpd --skip-tags users
-'''
 
 ## Notes
 - DNS record 'ca.yabe.corp -> 10.30.10.13' must be created on DC01 before TLS (used in FTPS) can be configured
