@@ -21,17 +21,17 @@ Provisioning FS01 file server for the Yabe e-commerce platform.
 
 All tunable variables live in 'vars/main.yml'.
 
-## Usage
+# Usage
 
-# Full run
-ansible-playbook site.yml -K
+## Full run
+- ansible-playbook site.yml -K
 
-# Single service
-ansible-playbook site.yml --tags samba -K
-ansible-playbook site.yml --tags nfs -K
-ansible-playbook site.yml --tags vsftpd -K
+## Single service
+- ansible-playbook site.yml --tags samba -K
+- ansible-playbook site.yml --tags nfs -K
+- ansible-playbook site.yml --tags vsftpd -K
 
 ## Notes
 - DNS record 'ca.yabe.corp -> 10.30.10.13' must be created on DC01 before TLS (used in FTPS) can be configured
 - NFS UID for 'yabe_web' must match on the web server (UID 1500)
-- FTPS and security hardening handlede in security phase
+- FTPS and security hardening handled in security phase
