@@ -40,7 +40,7 @@ All tunable variables live in 'vars/main.yml'.
 - ansible-playbook site.yml --tags users
 
 #### Run only FTP infrastructure, no user management
-ansible-playbook site.yml --tags vsftpd --skip-tags users
+- ansible-playbook site.yml --tags vsftpd --skip-tags users
 
 ## Notes
 - DNS record 'ca.yabe.corp -> 10.30.10.13' must be created on DC01 before TLS (used in FTPS) can be configured
