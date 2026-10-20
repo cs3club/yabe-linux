@@ -9,3 +9,6 @@ chroot_local_user={{ ftp_chroot_local_user }}
 listen={{ ftp_listen }}
 listen_ipv6={{ ftp_listen_ipv6 }}
 pam_service_name={{ ftp_pam_service_name }}
+pasv_address={{ ansible_host }}
+pasv_min_port={{ ftp_pasv_min_port }}
+pasv_max_port={{ ftp_pasv_max_port }}

@@ -27,6 +27,8 @@ ftp_connect_from_port_20: "YES"
 ftp_listen: "YES"
 ftp_listen_ipv6: "NO"
 ftp_pam_service_name: "vsftpd"
+ftp_pasv_min_port: 40000
+ftp_pasv_max_port: 40100
 ftp_path: "/srv/ftp/vendors"
 ftp_groups:
   - name: vendors
