@@ -1,0 +1,44 @@
+---
+# roles/postgresql/tasks/main.yml
+# Tasks for installing and configuring PostgreSQL
+
+- name: Install PostgreSQL
+  community.general.zypper:
+    name:
+      - postgresql
+      - postgresql-server
+    state: present
+
+- name: Initialize PostgreSQL database
+  ansible.builtin.command:
+    cmd: /usr/bin/postgresql-setup --initdb
+    creates: /var/lib/pgsql/data/PG_VERSION
+
+- name: Enable and start PostgreSQL service
+  ansible.builtin.service:
+    name: postgresql
+    state: started
+    enabled: true
+
+- name: Set PostgreSQL admin password
+  community.general.postgresql_user:
+    name: postgres
+    password: "{{ postgresql_root_password  }}"
+    state: present
+  become: true
+  become_user: postgres
+
+- name: Remove PostgreSQL test database
+  community.general.postgresql_db:
+    name: test
+    state: absent
+  become: true
+  become_user: postgres
+
+- name: Configure PostgreSQL to require passwords
+  ansible.builtin.lineinfile:
+    path: /var/lib/pgsql/data/pg_hba.conf
+    regexp: '^host\s+all\s+all\s+127.0.0.1'
+    line: 'host    all             all             127.0.0.1/32            md5'
+    state: present
+  notify: restart postgresql
