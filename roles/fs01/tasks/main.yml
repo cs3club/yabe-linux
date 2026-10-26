@@ -16,3 +16,6 @@
   
 - ansible.builtin.import_tasks: vsftpd_users.yml
   tags: [vsftpd, infra, users]
+
+- ansible.builtin.import_tasks: vsftpd_offboarding.yml
+  tags: [vsftpd, infra, users]
