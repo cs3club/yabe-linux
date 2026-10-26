@@ -12,6 +12,11 @@
     state: directory
     mode: '0755'
 
+- name: Check NFS export directory
+  ansible.builtin.stat:
+    path: "{{ nfs_path }}"
+  register: nfs_export_dir
+
 - name: Configure NFS exports
   ansible.builtin.template:
     src: exports.j2
@@ -20,6 +25,7 @@
     group: root
     mode: '0644'
   notify: Reload NFS exports
+  when: nfs_export_dir.stat.exists
 
 - name: Enable and start NFS server
   ansible.builtin.service:
