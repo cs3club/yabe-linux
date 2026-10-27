@@ -1,3 +1,4 @@
+---
 # ------ User Offboarding ------
 - name: Get list of vendor users on system
   ansible.builtin.shell: "getent group vendors | cut -d: -f4 | tr ',' '\n'"

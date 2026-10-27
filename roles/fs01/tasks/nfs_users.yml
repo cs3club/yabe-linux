@@ -1,18 +1,9 @@
 ---
-- name: Check if NFS user exists
-  ansible.builtin.command: id {{ item.name }}
-  loop: "{{ nfs_users }}"
-  register: nfs_user_check
-  changed_when: false
-  failed_when: false
-  no_log: true
-
 - name: Create NFS service accounts
   ansible.builtin.user:
-    name: "{{ item.item.name }}"
-    uid: "{{ item.item.uid }}"
+    name: "{{ item.name }}"
+    uid: "{{ item.uid }}"
     system: true
     state: present
-  loop: "{{ nfs_user_check.results }}"
-  when: item.rc is defined and item.rc != 0
-  no_log: true
+  loop: "{{ nfs_users }}"
+
