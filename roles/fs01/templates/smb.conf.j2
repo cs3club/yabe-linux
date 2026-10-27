@@ -1,0 +1,22 @@
+[global]
+   workgroup = {{ samba_workgroup }}
+   server string = {{ samba_server_string }}
+   security = {{ samba_security }}
+   map to guest = {{ samba_map_to_guest }}
+   min protocol = {{ samba_min_protocol }}
+   log file = {{ samba_log_path }}
+   log level = {{ samba_log_level }}
+   hosts allow = {{ samba_hosts_allow }}
+   hosts deny = ALL
+
+{% for share in samba_groups %}
+[{{ share.name }}]
+   path = {{ share.path }}
+   browseable = {{ samba_browseable }}
+   read only = {{ share.read_only }}
+   valid user = @{{ share.group }}
+   create mask = 0660
+   directory mask = 0770
+   force group = {{ share.group }}
+
+{% endfor %}
