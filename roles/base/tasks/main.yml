@@ -1,0 +1,3 @@
+---
+- ansible.builtin.import_tasks: base_service_account.yml
+  tags: [base, account_setup]

@@ -4,3 +4,71 @@
 # All tunable values live here — never hardcoded in tasks.
 
 domain: "yabe.corp"
+
+#----------NFS----------
+nfs_allowed_network: "10.30.0.0/16"
+nfs_export_options: "ro,sync,no_subtree_check"
+nfs_path: "/srv/ftp/vendors"
+#Note: yabe_web UID HAS TO MATCH on web01 - coord with web01
+nfs_users:
+  - name: yabe_web
+    uid: 1500
+    comment: "Yabe web server service account"
+
+#----------FTP----------
+ftp_banner: "Welcome to YABE FTP Server! Authorized users only. Unauthorized access WILL BE PROSECUTED."
+ftp_anonymous_enable: "NO"
+ftp_local_enable: "YES"
+ftp_write_enable: "YES"
+ftp_local_umask: "022"
+ftp_chroot_local_user: "YES"
+ftp_dirmessage_enable: "YES"
+ftp_xferlog_enable: "YES"
+ftp_connect_from_port_20: "YES"
+ftp_listen: "YES"
+ftp_listen_ipv6: "NO"
+ftp_pam_service_name: "vsftpd"
+ftp_pasv_min_port: 40000
+ftp_pasv_max_port: 40100
+ftp_idle_timeout: 300
+ftp_data_timeout: 120
+ftp_path: "/srv/ftp/vendors"
+ftp_max_clients: 50
+ftp_max_per_ip: 5
+ftp_groups:
+  - name: vendors
+ftp_users:
+  - name: joystickjunction
+    group: vendors
+    password: "{{ vault_ftp_joystick }}"
+  - name: hamchan_imports
+    group: vendors
+    password: "{{ vault_ftp_hamchan }}"
+
+#---------SAMBA---------
+samba_workgroup: "YABE"
+samba_server_string: "FS01 File Server"
+samba_security: "user"
+samba_map_to_guest: "never"
+samba_browseable: "yes"
+samba_min_protocol: "SMB2"
+samba_log_path: "/var/log/samba/log.%m"
+samba_log_level: 1
+samba_max_log_size: 5000
+samba_hosts_allow: "10.30.0.0/16 127.0.0.1"
+samba_groups:
+  - name: admin
+    path: "/srv/samba/admin"
+    group: admin
+    read_only: "no"
+  - name: staff
+    path: "/srv/samba/staff"
+    group: staff
+    read_only: "yes"
+samba_users:
+  - name: sdavis
+    group: admin
+    password: "{{ vault_samba_sdavis }}"
+  - name: yabe_staff
+    group: staff
+    password: "{{ vault_samba_staff }}"

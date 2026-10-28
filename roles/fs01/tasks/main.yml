@@ -1,0 +1,21 @@
+---
+- ansible.builtin.import_tasks: samba_infrastructure.yml
+  tags: [samba, infra]
+
+- ansible.builtin.import_tasks: samba_users.yml
+  tags: [samba, infra, users]
+
+- ansible.builtin.import_tasks: nfs_infrastructure.yml
+  tags: [nfs, infra]
+  
+- ansible.builtin.import_tasks: nfs_users.yml
+  tags: [nfs, infra, users]
+
+- ansible.builtin.import_tasks: vsftpd_infrastructure.yml
+  tags: [vsftpd, infra]
+  
+- ansible.builtin.import_tasks: vsftpd_users.yml
+  tags: [vsftpd, infra, users]
+
+- ansible.builtin.import_tasks: vsftpd_offboarding.yml
+  tags: [vsftpd, infra, users]
