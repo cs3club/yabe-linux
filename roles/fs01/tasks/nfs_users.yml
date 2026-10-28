@@ -1,0 +1,9 @@
+---
+- name: Create NFS service accounts
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    uid: "{{ item.uid }}"
+    system: true
+    state: present
+  loop: "{{ nfs_users }}"
+
