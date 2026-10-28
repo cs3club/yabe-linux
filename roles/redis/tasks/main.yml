@@ -1,0 +1,8 @@
+---
+# roles/redis/tasks/main.yml
+# Entry point for Redis role
+# References tasks to install, configure, and harden Redis service
+
+- ansible.builtin.include_tasks: install.yml
+
+- ansible.builtin.include_tasks: configure.yml

@@ -1,0 +1,16 @@
+---
+# roles/mariadb/tasks/install.yml
+# Package installation tasks for MariaDB
+
+- name: Install MariaDB
+  community.general.zypper:
+    name:
+      - mariadb
+      - mariadb-tools
+    state: present
+
+- name: Install PyMySQL
+  community.general.zypper:
+    name:
+      - python3-PyMySQL
+    state: present

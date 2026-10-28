@@ -2,34 +2,12 @@
 # roles/mariadb/tasks/main.yml
 # Tasks for installing and configuring MariaDB
 
-- name: Install MariaDB
-  community.general.zypper:
-    name:
-      - mariadb
-      - mariadb-client
-    state: present
+- name: Include install tasks
+  ansible.builtin.include_tasks: install.yml
 
-- name: Enable and Start MariaDB Service
-  ansible.builtin.service:
-  name: mariadb
-  state: started
-  enabled: true
+- name: Include configure tasks
+  ansible.builtin.include_tasks: configure.yml
 
-- name: Set MariaDB root Password
-  community.general.mysql_user:
-  name: root
-  password: "{{ mariadb_root_password }}"
-  login_unix_socket: /var/run/mysql.sock
-  state: present
-
-- name: Remove anonymous MariaDB users
-  community.general.mysql_user:
-  name: ""
-  state: absent
-  login_unix_socket: /var/run/mysql/mysql.sock
-
-- name: Remove MariaDB Test Database
-  community.general.mysql_db:
-  name: test
-  state: absent
-  login_unix_socket: /var/run/mysql/mysql.sock
+# For Future Reference:
+# - name: Include hardening tasks
+#   ansible.builtin.include_tasks: harden.yml

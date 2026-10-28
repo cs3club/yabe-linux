@@ -1,0 +1,10 @@
+---
+# roles/postgresql/tasks/install.yml
+# PostgreSQL package installation tasks
+
+- name: Install PostgreSQL
+  community.general.zypper:
+    name:
+      - postgresql
+      - postgresql-server
+    state: present
