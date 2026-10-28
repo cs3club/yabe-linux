@@ -6,8 +6,15 @@
 #   ansible-playbook site.yml                  (apply)
 #   ansible-playbook site.yml --tags <tag>     (run one role only)
 
-- name: All plays
+- name: Base configuration
   hosts: all
+  become: true
+  roles:
+    - role: base
+      tags: [base]
+
+- name: FS01 file server and CA infrastructure
+  hosts: fs01
   become: true
   gather_facts: true
   roles:
@@ -17,7 +24,9 @@
       tags: postgresql
     - role: redis
       tags: redis
-  # Add roles here as you build them, e.g.:
-  # roles:
-  #   - role: vyos
-  #     tags: vyos
+  vars_files:
+    - vars/main.yml
+    - vars/secrets.yml
+  roles:
+    - role: fs01
+      tags: [fs01, infra]

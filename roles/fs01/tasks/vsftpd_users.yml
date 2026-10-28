@@ -1,0 +1,56 @@
+---
+- name: Create FTP groups
+  ansible.builtin.group:
+    name: "{{ item.name }}"
+    state: present
+  loop: "{{ ftp_groups }}"
+
+- name: Create FTP vendor directories
+  ansible.builtin.file:
+    path: "{{ ftp_path }}/{{ item.name }}"
+    state: directory
+    owner: root
+    group: "{{ item.group }}"
+    mode: '0750'
+  loop: "{{ ftp_users }}"
+  no_log: true
+
+# ----- User Onboarding -------
+- name: Check if FTP user exists
+  ansible.builtin.command: id {{ item.name }}
+  loop: "{{ ftp_users }}"
+  register: ftp_user_check
+  changed_when: false
+  failed_when: false
+  no_log: true
+
+- name: Create LINUX users for FTP
+  ansible.builtin.user:
+    name: "{{ item.item.name }}"
+    groups: "{{ item.item.group }}"
+    home: "{{ ftp_path }}/{{ item.item.name }}"
+    append: true
+    state: present
+  loop: "{{ ftp_user_check.results }}"
+  when: item.rc is defined and item.rc != 0
+  no_log: true
+
+- name: Set FTP user passwords
+  ansible.builtin.shell: >
+    printf '%s\n%s\n' '{{ item.item.password }}' '{{ item.item.password }}' |
+    passwd --stdin {{ item.item.name }}
+  loop: "{{ ftp_user_check.results }}"
+  when: item.rc is defined and item.rc != 0
+  changed_when: true
+  no_log: true
+
+- name: Create vendor subdirectories
+  ansible.builtin.file:
+    path: "{{ ftp_path }}/{{ item.0.name }}/{{ item.1 }}"
+    state: directory
+    owner: "{{ item.0.name }}"
+    group: "{{ item.0.group }}"
+    mode: '0750'
+  loop: "{{ ftp_users | product(['products', 'images', 'inventory']) | list }}"
+  no_log: true
+

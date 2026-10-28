@@ -1,0 +1,4 @@
+# root_squash is active by default
+# no_root_squash is INTENTIONALLY NOT SET - web server should never need root access
+
+{{ nfs_path }}     {{ nfs_allowed_network }}({{ nfs_export_options }})
