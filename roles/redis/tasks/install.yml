@@ -1,0 +1,9 @@
+---
+# roles/redis/tasks/install.yml
+# Redis package installation tasks
+
+- name: Install Redis
+  community.general.zypper:
+    name:
+      - redis
+    state: present

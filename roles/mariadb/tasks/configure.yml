@@ -1,0 +1,28 @@
+---
+# roles/mariadb/tasks/configure.yml
+# Configuration tasks for MariaDB
+
+- name: Enable and start MariaDB service
+  ansible.builtin.service:
+    name: mariadb
+    state: started
+    enabled: true
+
+- name: Set MariaDB root password
+  community.mysql.mysql_user:
+    name: root
+    password: "{{ mariadb_root_password }}"
+    login_unix_socket: /var/run/mysql/mysql.sock
+    state: present
+
+- name: Remove anonymous MariaDB users
+  community.mysql.mysql_user:
+    name: ""
+    state: absent
+    login_unix_socket: /var/run/mysql/mysql.sock
+
+- name: Remove MariaDB test database
+  community.mysql.mysql_db:
+    name: test
+    state: absent
+    login_unix_socket: /var/run/mysql/mysql.sock

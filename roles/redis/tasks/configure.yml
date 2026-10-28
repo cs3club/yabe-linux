@@ -1,0 +1,25 @@
+---
+# roles/redis/tasks/configure.yml
+# Redis Configuration Tasks
+
+- name: Enable and start Redis service
+  ansible.builtin.service:
+    name: redis
+    state: started
+    enabled: true
+
+- name: Require password authentication for Redis
+  ansible.builtin.lineinfile:
+    path: /etc/redis/redis.conf
+    regexp: '^#\s*requirepass'
+    line: 'requirepasss {{ redis_password }}'
+    state: present
+  notify: restart redis
+
+- name: Bind Redis to localhost only
+  ansible.builtin.lineinfile:
+    path: /etc/redis/redis.conf
+    regexp: '^bind'
+    line: 'bind 127.0.0.1'
+    state: present
+  notify: restart redis

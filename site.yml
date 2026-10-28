@@ -13,10 +13,13 @@
     - role: base
       tags: [base]
 
-- name: FS01 file server and CA infrastructure
-  hosts: fs01
+- name: DB01 database server
+  hosts: db01
   become: true
   gather_facts: true
+  vars_files:
+    - vars/main.yml
+    - vars/secrets.yml
   roles:
     - role: mariadb
       tags: mariadb
@@ -24,6 +27,11 @@
       tags: postgresql
     - role: redis
       tags: redis
+
+- name: FS01 file server and CA infrastructure
+  hosts: fs01
+  become: true
+  gather_facts: true
   vars_files:
     - vars/main.yml
     - vars/secrets.yml
