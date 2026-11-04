@@ -1,0 +1,19 @@
+---
+galaxy_info:
+  author: andreu
+  description: Provisions DB01 databse server for Yabe e-commerce platform
+  company: Yabe
+  license: MIT
+  min_ansible_version: "2.14"
+  platforms:
+    - name: opensuse
+      versions:
+        - 16
+  galaxy_tags:
+    - mariadb
+    - postgresql
+    - redis
+    - database
+
+dependencies:
+  - role: base 
