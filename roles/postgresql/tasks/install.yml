@@ -8,3 +8,9 @@
       - postgresql
       - postgresql-server
     state: present
+
+- name: Install psycopg2 for Ansible PostgreSQL management
+  community.general.zypper:
+    name:
+      - python3-psycopg2
+    state: present
