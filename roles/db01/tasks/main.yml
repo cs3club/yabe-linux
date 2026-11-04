@@ -1,0 +1,18 @@
+---
+- ansible.builtin.import_tasks: mariadb_infrastructure.yml
+  tags: [mariadb, infra]
+
+- ansible.builtin.import_tasks: mariadb_users.yml
+  tags: [mariadb, users]
+
+- ansible.builtin.import_tasks: postgresql_infrastructure.yml
+  tags: [postgresql, infra]
+
+- ansible.builtin.import_tasks: postgresql_users.yml
+  tags: [postgresql, users]
+
+- ansible.builtin.import_tasks: redis_infrastructure.yml
+  tags: [redis, infra]
+
+- ansible.builtin.import_tasks: redis_users.yml
+  tags:[redis, users]
