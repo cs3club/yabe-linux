@@ -1,8 +1,0 @@
----
-# roles/postgresql/tasks/main.yml
-# Entry point for PostgreSQL role
-# References tasks for installing, configuring, and hardening PostgreSQL
-
-- ansible.builtin.include_tasks: install.yml
-
-- ansible.builtin.include_tasks: configure.yml

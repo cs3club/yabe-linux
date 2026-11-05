@@ -1,6 +1,11 @@
 ---
-# roles/redis/tasks/configure.yml
-# Redis Configuration Tasks
+# Redis infrastructure tasks
+
+- name: Install Redis
+  community.general.zypper:
+    name:
+      - redis
+    state: present
 
 - name: Create Redis data directory
   ansible.builtin.file:
@@ -35,3 +40,4 @@
     name: redis@default
     state: started
     enabled: true
+

@@ -15,4 +15,4 @@
   tags: [redis, infra]
 
 - ansible.builtin.import_tasks: redis_users.yml
-  tags:[redis, users]
+  tags: [redis, users]
