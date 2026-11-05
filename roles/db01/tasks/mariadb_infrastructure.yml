@@ -1,6 +1,19 @@
 ---
-# roles/mariadb/tasks/configure.yml
-# Configuration tasks for MariaDB
+# MariaDB infrastructure tasks
+
+- name: Install MariaDB
+  community.general.zypper:
+    name:
+      - mariadb
+      - mariadb-client
+      - mariadb-tools
+    state: present
+
+- name: Install PyMySQL for Ansible MariaDB management
+  community.general.zypper:
+    name:
+      - python3-PyMySQL
+    state: present
 
 - name: Enable and start MariaDB service
   ansible.builtin.service:

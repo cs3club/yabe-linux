@@ -21,12 +21,8 @@
     - vars/main.yml
     - vars/secrets.yml
   roles:
-    - role: mariadb
-      tags: mariadb
-    - role: postgresql
-      tags: postgresql
-    - role: redis
-      tags: redis
+    - role: db01
+      tags: [db01]
 
 - name: FS01 file server and CA infrastructure
   hosts: fs01

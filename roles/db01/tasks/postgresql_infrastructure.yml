@@ -1,6 +1,18 @@
 ---
-# roles/postgresql/tasks/configure.yml
-# PostgreSQL configuration tasks
+# PostgreSQL infrastructure tasks
+
+- name: Install PostgreSQL
+  community.general.zypper:
+    name:
+      - postgresql
+      - postgresql-server
+    state: present
+
+- name: Install psycopg2 for Ansible PostgreSQL management
+  community.general.zypper:
+    name:
+      - python3-psycopg2
+    state: present
 
 - name: Initialize PostgreSQL database
   ansible.builtin.command:
@@ -34,6 +46,6 @@
   ansible.builtin.lineinfile:
     path: /var/lib/pgsql/data/pg_hba.conf
     regexp: '^host\s+all\s+all\s+127.0.0.1'
-    line: 'host    all             all             127.0.0.1/32             md5'
+    line: 'host    all             all             127.0.0.1/32            md5'
     state: present
   notify: restart postgresql
