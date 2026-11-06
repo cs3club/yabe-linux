@@ -1,0 +1,47 @@
+---
+# MariaDB infrastructure tasks
+
+- name: Install MariaDB
+  community.general.zypper:
+    name:
+      - mariadb
+      - mariadb-client
+      - mariadb-tools
+    state: present
+
+- name: Install PyMySQL for Ansible MariaDB management
+  community.general.zypper:
+    name:
+      - python3-PyMySQL
+    state: present
+
+- name: Enable and start MariaDB service
+  ansible.builtin.service:
+    name: mariadb
+    state: started
+    enabled: true
+
+- name: Set MariaDB root password
+  community.mysql.mysql_user:
+    name: root
+    password: "{{ mariadb_root_password }}"
+    login_unix_socket: /var/run/mysql/mysql.sock
+    login_user: root
+    login_password: "{{ mariadb_root_password }}"
+    state: present
+
+- name: Remove anonymous MariaDB users
+  community.mysql.mysql_user:
+    name: ""
+    state: absent
+    login_unix_socket: /var/run/mysql/mysql.sock
+    login_user: root
+    login_password: "{{ mariadb_root_password }}"
+
+- name: Remove MariaDB test database
+  community.mysql.mysql_db:
+    name: test
+    state: absent
+    login_unix_socket: /var/run/mysql/mysql.sock
+    login_user: root
+    login_password: "{{ mariadb_root_password }}"
