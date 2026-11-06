@@ -1,3 +1,12 @@
 ---
+# roles/db01/tasks/redis_users.yml
 # Redis user management tasks
-# Fake company users will be added here
+# Redis uses ACL based authentication
+# Default access controlled via requirepass in redis_infrastructure.yml
+# Future: individual ACL users can be added here per department
+
+- name: Set Redis ACL for default user
+  ansible.builtin.command:
+    cmd: redis-cli -a {{ redis_password }} ACL SETUSER default on >{{ redis_password }} ~* &* +@all
+  no_log: true
+  changed_when: false

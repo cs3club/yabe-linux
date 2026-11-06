@@ -1,3 +1,26 @@
 ---
+# roles/db01/tasks/mariadb_users.yml
 # MariaDB user management tasks
-# Fake company users will be added here
+# Users are defined in vars/main.yml under db_users
+# Passwords are defined in vars/secrets.yml under vault_db_user_password
+
+- name: Create MariaDB user accounts
+  community.mysql.mysql_user:
+    name: "{{ item.first[0] | lower }}.{{ item.last | lower }}"
+    password: "{{ db_default_password }}"
+    login_unix_socket: /var/run/mysql/mysql.sock
+    login_user: root
+    login_password: "{{ mariadb_root_password }}"
+    state: present
+  loop: "{{ db_users }}"
+  no_log: true
+
+- name: Remove offboarded MariaDB users
+  community.mysql.mysql_user:
+    name: "{{ item }}"
+    login_unix_socket: /var/run/mysql/mysql.sock
+    login_user: root
+    login_password: "{{ mariadb_root_password }}"
+    state: absent
+  loop: "{{ offboarded_db_users | default([]) }}"
+  no_log: true
