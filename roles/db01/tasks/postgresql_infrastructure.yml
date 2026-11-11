@@ -42,10 +42,11 @@
   become: true
   become_user: postgres
 
-- name: Configure PostgreSQL to require passwords
-  ansible.builtin.lineinfile:
-    path: /var/lib/pgsql/data/pg_hba.conf
-    regexp: '^host\s+all\s+all\s+127.0.0.1'
-    line: 'host    all             all             127.0.0.1/32            md5'
-    state: present
+- name: Configure PostgreSQL authentication
+  ansible.builtin.template:
+    src: pg_hba.conf.j2
+    dest: /var/lib/pgsql/data/pg_hba.conf
+    owner: postgres
+    group: postgres
+    mode: '0600'
   notify: restart postgresql

@@ -23,17 +23,14 @@
     group: redis
     mode: '0750'
 
-- name: Create Redis default config file
-  ansible.builtin.copy:
+- name: Configure Redis
+  ansible.builtin.template:
+    src: redis.conf.j2
     dest: /etc/redis/default.conf
     owner: redis
     group: redis
     mode: '0640'
-    content: |
-      bind 127.0.0.1
-      requirepass {{ redis_password }}
-      loglevel notice
-      dir /var/lib/redis
+  notify: restart redis
 
 - name: Enable and start Redis service
   ansible.builtin.service:
