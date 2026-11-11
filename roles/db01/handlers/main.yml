@@ -8,3 +8,5 @@
   ansible.builtin.service:
     name: redis@default
     state: restarted
+  async: 60
+  poll: 5
