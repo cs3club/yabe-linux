@@ -2,6 +2,7 @@
 
 # ── Secrets ───────────────────────────────────────────────────────
 vars/secrets.yml
+vars/secrets.enc.yml
 vars/secrets.enc.yml.dec
 *secret*
 *password*
@@ -42,4 +43,3 @@ venv/
 
 # ── Exceptions ────────────────────────────────────────────────────
 !vars/secrets.yml.example
-!vars/secrets.enc.yml
