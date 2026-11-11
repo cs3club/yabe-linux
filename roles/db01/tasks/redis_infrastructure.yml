@@ -1,0 +1,40 @@
+---
+# Redis infrastructure tasks
+
+- name: Install Redis
+  community.general.zypper:
+    name:
+      - redis
+    state: present
+
+- name: Create Redis data directory
+  ansible.builtin.file:
+    path: /var/lib/redis
+    state: directory
+    owner: redis
+    group: redis
+    mode: '0750'
+
+- name: Create Redis config directory
+  ansible.builtin.file:
+    path: /etc/redis
+    state: directory
+    owner: redis
+    group: redis
+    mode: '0750'
+
+- name: Configure Redis
+  ansible.builtin.template:
+    src: redis.conf.j2
+    dest: /etc/redis/default.conf
+    owner: redis
+    group: redis
+    mode: '0640'
+  notify: restart redis
+
+- name: Enable and start Redis service
+  ansible.builtin.service:
+    name: redis@default
+    state: started
+    enabled: true
+

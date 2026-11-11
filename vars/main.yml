@@ -72,3 +72,8 @@ samba_users:
   - name: yabe_staff
     group: staff
     password: "{{ vault_samba_staff }}"
+
+#---------DB01----------
+db_default_password: "{{ vault_db_user_password }}"
+
+db_users: []

@@ -1,0 +1,12 @@
+---
+- name: restart postgresql
+  ansible.builtin.service:
+    name: postgresql
+    state: restarted
+
+- name: restart redis
+  ansible.builtin.service:
+    name: redis@default
+    state: restarted
+  async: 60
+  poll: 5

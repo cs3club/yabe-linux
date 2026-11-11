@@ -1,0 +1,3 @@
+creation_rules:
+  - path_regex: vars/secrets\.yml$
+    age: age129vkrh3eg633ztq7dpfvs57l5ye6emzl3rveaz20l3wwy3jnf5pqzf66xk

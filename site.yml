@@ -13,6 +13,17 @@
     - role: base
       tags: [base]
 
+- name: DB01 database server
+  hosts: db01
+  become: true
+  gather_facts: true
+  vars_files:
+    - vars/main.yml
+    - vars/secrets.yml
+  roles:
+    - role: db01
+      tags: [db01]
+
 - name: FS01 file server and CA infrastructure
   hosts: fs01
   become: true

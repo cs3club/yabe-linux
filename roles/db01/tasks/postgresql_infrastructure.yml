@@ -1,0 +1,52 @@
+---
+# PostgreSQL infrastructure tasks
+
+- name: Install PostgreSQL
+  community.general.zypper:
+    name:
+      - postgresql
+      - postgresql-server
+    state: present
+
+- name: Install psycopg2 for Ansible PostgreSQL management
+  community.general.zypper:
+    name:
+      - python3-psycopg2
+    state: present
+
+- name: Initialize PostgreSQL database
+  ansible.builtin.command:
+    cmd: /usr/bin/initdb -D /var/lib/pgsql/data
+    creates: /var/lib/pgsql/data/PG_VERSION
+  become: true
+  become_user: postgres
+
+- name: Enable and start PostgreSQL service
+  ansible.builtin.service:
+    name: postgresql
+    state: started
+    enabled: true
+
+- name: Set PostgreSQL admin password
+  community.general.postgresql_user:
+    name: postgres
+    password: "{{ postgresql_root_password }}"
+    state: present
+  become: true
+  become_user: postgres
+
+- name: Remove PostgreSQL test database
+  community.general.postgresql_db:
+    name: test
+    state: absent
+  become: true
+  become_user: postgres
+
+- name: Configure PostgreSQL authentication
+  ansible.builtin.template:
+    src: pg_hba.conf.j2
+    dest: /var/lib/pgsql/data/pg_hba.conf
+    owner: postgres
+    group: postgres
+    mode: '0600'
+  notify: restart postgresql

@@ -1,0 +1,14 @@
+# pg_hba.conf - PostgreSQL Client Authentication Configuration
+# Managed by Ansible - do not edit manually
+# Host Database User Address Method
+
+# Local unix socket connections
+local   all             all                                     peer
+
+# Local loopback connections - require password
+host    all             all             127.0.0.1/32            md5
+host    all             all             ::1/128                 md5
+
+# Replication connections
+local   replication     all                                     peer
+host    replication     all             127.0.0.1/32            md5

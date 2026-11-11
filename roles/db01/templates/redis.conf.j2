@@ -1,0 +1,7 @@
+# redis.conf - Redis Configuration
+# Managed by Ansible - do not edit manually
+
+bind 127.0.0.1
+requirepass {{ redis_password }}
+loglevel notice
+dir /var/lib/redis

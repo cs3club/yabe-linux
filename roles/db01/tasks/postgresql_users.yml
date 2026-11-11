@@ -1,0 +1,24 @@
+---
+# roles/db01/tasks/postgresql_users.yml
+# PostgreSQL user management tasks
+# Users are defined in vars/main.yml under db_users
+# Passwords are defined in vars/secrets.yml under vault_db_user_password
+
+- name: Create PostgreSQL user accounts
+  community.general.postgresql_user:
+    name: "{{ item.first[0] | lower }}.{{ item.last | lower }}"
+    password: "{{ db_default_password }}"
+    state: present
+  loop: "{{ db_users }}"
+  become: true
+  become_user: postgres
+  no_log: true
+
+- name: Remove offboarded PostgreSQL users
+  community.general.postgresql_user:
+    name: "{{ item }}"
+    state: absent
+  loop: "{{ offboarded_db_users | default([]) }}"
+  become: true
+  become_user: postgres
+  no_log: true
